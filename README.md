@@ -6,6 +6,8 @@ This project is a great example of a serverless architecture using key AWS servi
 
 ## **Project Architecture**
 
+![Architecture Diagram](./architecture.png)
+
 The application is built on a serverless stack, leveraging several core AWS services to manage data ingestion, API exposure, and front-end hosting.
 
 1. **News Ingestion**: An AWS Lambda function (NewsFetcherFunction) is triggered on a schedule by Amazon EventBridge (formerly CloudWatch Events). This function fetches articles from configured RSS feeds.  
@@ -28,12 +30,25 @@ The application is built on a serverless stack, leveraging several core AWS serv
 
 This project requires an AWS account. The steps to deploy this application are detailed in the project's documentation, but they generally involve:
 
-1. Creating a DynamoDB table.  
+1. Creating a DynamoDB table.
+
 2. Deploying the NewsFetcherFunction to ingest data.  
+[NewsFetcherFunction](./proofs/NewsFetcherLambda.yaml)
+
 3. Setting up an EventBridge rule to schedule the NewsFetcherFunction.  
+[EventBridge](./proofs/Rule-FetchNewsSchedule-CloudFormation-Template.yaml)
+
 4. Deploying the NewsAPIFunction to handle API requests.  
+[NewsAPIFunction](./proofs/NewsAPIFunction.yaml)
+
 5. Creating an API Gateway endpoint for the NewsAPIFunction with CORS enabled.  
+[APIendpoints](./proofs/api_gateway.png)
+
 6. Configuring and uploading the static website to an S3 bucket with public access enabled.
+   
+[Watch Demo](./proofs/s3staticwebsite.mp4)
+
+[Dataset](./proofs/results.csv)
 
 ## **Code Structure**
 
