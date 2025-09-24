@@ -6,7 +6,7 @@ This project is a great example of a serverless architecture using key AWS servi
 
 ## **Project Architecture**
 
-![Architecture Diagram](./architecture.png)
+<img src="./architecture.png" alt="Architecture Diagram" />
 
 The application is built on a serverless stack, leveraging several core AWS services to manage data ingestion, API exposure, and front-end hosting.
 
@@ -45,8 +45,8 @@ This project requires an AWS account. The steps to deploy this application are d
 [APIendpoints](./proofs/api_gateway.png)
 
 6. Configuring and uploading the static website to an S3 bucket with public access enabled.
-   
-[Watch Demo](./proofs/s3staticwebsite.mp4)
+
+<video src="./proofs/s3staticwebsite.mp4" controls autoplay loop muted width="600"</video>
 
 [Dataset](./proofs/results.csv)
 
