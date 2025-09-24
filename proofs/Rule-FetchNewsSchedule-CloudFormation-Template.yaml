@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template for EventBridge RuleFetchNewsSchedule
+Resources:
+  Rule462be09e:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: FetchNewsSchedule
+      ScheduleExpression: rate(30 minutes)
+      State: ENABLED
+      EventBusName: default
+      Targets:
+        - Id: Idb7672f7c-3e9e-4247-a639-f1ae8dc81aec
+          Arn:
+            Fn::Sub: >-
+              arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:NewsFetcherLambda
+Parameters: {}

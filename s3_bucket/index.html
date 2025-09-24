@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Serverless News Aggregator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #eef2f7; 
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { 
+            max-width: 960px; 
+            margin: auto; 
+            background: #ffffff; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        h1 { 
+            text-align: center; 
+            color: #2c3e50; 
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .article { 
+            border-bottom: 1px solid #e0e0e0; 
+            padding: 20px 0; 
+        }
+        .article:last-child { 
+            border-bottom: none; 
+        }
+        .article h2 { 
+            margin-top: 0; 
+            margin-bottom: 10px;
+            color: #3498db; 
+            font-size: 1.8em;
+        }
+        .article a { 
+            text-decoration: none; 
+            color: #3498db; 
+            font-weight: 600; 
+        }
+        .article a:hover { 
+            text-decoration: underline; 
+        }
+        .article .source-date { 
+            font-size: 0.9em; 
+            color: #7f8c8d; 
+            margin-bottom: 15px; 
+        }
+        .article .description { 
+            color: #555; 
+            font-size: 1em;
+        }
+        .loading, .error-message { 
+            text-align: center; 
+            padding: 30px; 
+            color: #888; 
+            font-size: 1.2em;
+        }
+        .error-message {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Serverless News Aggregator</h1>
+        <div id="news-list">
+            <p class="loading">Loading latest news...</p>
+        </div>
+    </div>
+
+    <script>
+        // !! IMPORTANT: REPLACE THIS WITH YOUR ACTUAL API GATEWAY ENDPOINT URL !!
+        const API_URL = 'https://syauxfy3fd.execute-api.ap-south-1.amazonaws.com/default/NewsAPIFunction'; 
+
+        async function fetchNews() {
+            const newsList = document.getElementById('news-list');
+            newsList.innerHTML = '<p class="loading">Loading latest news...</p>'; // Show loading state
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const articles = await response.json();
+                displayNews(articles);
+            } catch (error) {
+                console.error("Could not fetch news:", error);
+                newsList.innerHTML = '<p class="error-message">Failed to load news. Please check the console for details and ensure the API URL is correct and the API Gateway is deployed with CORS enabled.</p>';
+            }
+        }
+
+        function displayNews(articles) {
+            const newsList = document.getElementById('news-list');
+            newsList.innerHTML = ''; // Clear loading message
+
+            if (articles.length === 0) {
+                newsList.innerHTML = '<p class="loading">No news articles found. The aggregator might be fetching new articles or there are no articles for display yet.</p>';
+                return;
+            }
+
+            articles.forEach(article => {
+                const articleDiv = document.createElement('div');
+                articleDiv.className = 'article';
+                
+                // Title and Link
+                const titleLink = document.createElement('a');
+                titleLink.href = article.link;
+                titleLink.target = "_blank"; // Open in new tab
+                titleLink.rel = "noopener noreferrer"; // Security best practice
+                titleLink.textContent = article.title;
+
+                const titleElem = document.createElement('h2');
+                titleElem.appendChild(titleLink);
+
+                // Source and Date
+                const sourceDateElem = document.createElement('p');
+                sourceDateElem.className = 'source-date';
+                let sourceDateText = `${article.source}`;
+                if (article.pubDate && article.pubDate !== 'N/A') {
+                    try {
+                        // Attempt to format date nicely
+                        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                        const date = new Date(article.pubDate);
+                        sourceDateText += ` - ${date.toLocaleDateString(undefined, dateOptions)}`;
+                    } catch (e) {
+                        sourceDateText += ` - ${article.pubDate}`; // Fallback if date parsing fails
+                    }
+                }
+                sourceDateElem.textContent = sourceDateText;
+
+                // Description
+                const descriptionElem = document.createElement('p');
+                descriptionElem.className = 'description';
+                descriptionElem.textContent = article.description;
+
+                articleDiv.appendChild(titleElem);
+                articleDiv.appendChild(sourceDateElem);
+                articleDiv.appendChild(descriptionElem);
+                
+                newsList.appendChild(articleDiv);
+            });
+        }
+
+        // Fetch news when the page loads
+        document.addEventListener('DOMContentLoaded', fetchNews);
+    </script>
+</body>
+</html>
