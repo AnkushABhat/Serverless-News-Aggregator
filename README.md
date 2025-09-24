@@ -46,7 +46,8 @@ This project requires an AWS account. The steps to deploy this application are d
 
 6. Configuring and uploading the static website to an S3 bucket with public access enabled.
 
-<video src="./proofs/s3staticwebsite.mp4" controls autoplay loop muted width="600"</video>
+<video src="./proofs/s3staticwebsite.mp4" controls autoplay loop muted width="600"
+</video>
 
 [Dataset](./proofs/results.csv)
 
